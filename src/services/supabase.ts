@@ -21,7 +21,7 @@ import { EDGE_FUNCTIONS, APP_CONFIG } from '../constants/config';
 import { Receipt, MonthlyStats, User, OcrAnalysisResponse, LogoTransferResponse } from '../types/index';
 
 // ─── Toggle this flag for dev/prod ────────────────────────────
-const USE_MOCK = true;
+const USE_MOCK = false;
 
 // ─────────────────────────────────────────────────────────────
 // MOCK DATA  (realistic, used when USE_MOCK = true)

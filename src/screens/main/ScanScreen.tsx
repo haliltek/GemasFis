@@ -95,6 +95,7 @@ export function ScanScreen({ navigation }: any) {
             quality: 0.92,
             allowsEditing: true,
             aspect: [3, 4],
+            cameraType: ImagePicker.CameraType.back,
         });
 
         if (!result.canceled && result.assets[0]) {
@@ -257,7 +258,7 @@ export function ScanScreen({ navigation }: any) {
                                     'Fişi düz ve aydınlık yüzeye koyun',
                                     'Tüm metin alanlarının görünür olmasını sağlayın',
                                     "Kamera'yı fişe dik tutun (perspektif bozulmasını önler)",
-                  'Toplam tutar ve tarih mutlaka görünmeli',
+                                    'Toplam tutar ve tarih mutlaka görünmeli',
                                 ].map((tip, i) => (
                                     <View key={i} style={styles.tipRow}>
                                         <Text style={styles.tipNumber}>{i + 1}</Text>

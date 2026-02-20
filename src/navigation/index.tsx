@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, View, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors, Typography } from '../constants/theme';
 import { useAuthStore } from '../store/authStore';
 import { getSupabase } from '../lib/supabase';
@@ -48,6 +49,8 @@ function TabIcon({ icon, focused }: { icon: string; focused: boolean }) {
 
 // ─── Bottom Tab Navigator ─────────────────────────────────────
 function MainTabNavigator() {
+  const insets = useSafeAreaInsets();
+  const bottomPad = Math.max(insets.bottom, 8);
   return (
     <Tab.Navigator
       screenOptions={{
@@ -56,15 +59,20 @@ function MainTabNavigator() {
           backgroundColor: Colors.surface,
           borderTopColor: Colors.border,
           borderTopWidth: 1,
-          paddingBottom: 6,
-          paddingTop: 6,
-          height: 62,
+          paddingBottom: bottomPad,
+          paddingTop: 8,
+          height: 56 + bottomPad,
+          elevation: 8,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.08,
+          shadowRadius: 8,
         },
-        tabBarActiveTintColor: Colors.primaryLight,
+        tabBarActiveTintColor: Colors.primary,
         tabBarInactiveTintColor: Colors.textTertiary,
         tabBarLabelStyle: {
           fontSize: Typography.xs,
-          fontWeight: Typography.weights.medium as any,
+          fontWeight: Typography.weights.semibold as any,
           marginTop: 2,
         },
       }}

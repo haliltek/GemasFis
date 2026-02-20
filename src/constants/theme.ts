@@ -1,37 +1,38 @@
-// ─── GemasFiş Design System ───────────────────────────────────
+// ─── GemasFiş Design System — Light Corporate Theme ───────────
 
 export const Colors = {
-  // Brand
-  primary: '#6C63FF',
-  primaryLight: '#8B85FF',
-  primaryDark: '#4F47E5',
-  secondary: '#FF6584',
+  // Brand (Corporate Blue)
+  primary: '#1E40AF',
+  primaryLight: '#2563EB',
+  primaryDark: '#1E3A8A',
+  secondary: '#7C3AED',
 
-  // Background (dark theme)
-  background: '#0F0F1A',
-  backgroundSecondary: '#1A1A2E',
-  surface: '#1E1E30',
-  surfaceLight: '#252540',
+  // Background (light theme)
+  background: '#F5F7FA',
+  backgroundSecondary: '#EEF1F6',
+  surface: '#FFFFFF',
+  surfaceLight: '#F8F9FC',
 
   // Text
-  textPrimary: '#FFFFFF',
-  textSecondary: '#B0B0CC',
-  textTertiary: '#6B6B8A',
+  textPrimary: '#111827',
+  textSecondary: '#4B5563',
+  textTertiary: '#9CA3AF',
 
   // Status
-  success: '#4CAF50',
-  successBg: '#1B3A1C',
-  warning: '#FF9800',
-  warningBg: '#3A2800',
-  error: '#F44336',
-  errorBg: '#3A1010',
-  info: '#2196F3',
-  infoBg: '#0D2540',
+  success: '#059669',
+  successBg: '#D1FAE5',
+  warning: '#D97706',
+  warningBg: '#FEF3C7',
+  error: '#DC2626',
+  errorBg: '#FEE2E2',
+  info: '#2563EB',
+  infoBg: '#DBEAFE',
 
   // Borders & Glass
-  border: '#2A2A45',
-  glass: 'rgba(255,255,255,0.05)',
-  glassBorder: 'rgba(255,255,255,0.10)',
+  border: '#E5E7EB',
+  glass: 'rgba(255,255,255,0.7)',
+  glassDark: 'rgba(0,0,0,0.3)',
+  glassBorder: 'rgba(0,0,0,0.08)',
 };
 
 export const Typography = {
@@ -63,6 +64,7 @@ export const Spacing = {
   xl: 24,
   '2xl': 32,
   '3xl': 48,
+  '4xl': 64,
 };
 
 export const BorderRadius = {
@@ -77,29 +79,29 @@ export const BorderRadius = {
 export const Shadows = {
   sm: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
     elevation: 2,
   },
   md: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.10,
     shadowRadius: 8,
     elevation: 4,
   },
   lg: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
     shadowRadius: 16,
     elevation: 8,
   },
   primary: {
-    shadowColor: '#6C63FF',
+    shadowColor: '#1E40AF',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4,
+    shadowOpacity: 0.25,
     shadowRadius: 12,
     elevation: 6,
   },
