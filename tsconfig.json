@@ -3,9 +3,5 @@
   "compilerOptions": {
     "moduleResolution": "bundler",
     "strict": true
-  },
-  "exclude": [
-    "node_modules",
-    "supabase/functions"
-  ]
+  }
 }
