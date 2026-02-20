@@ -1,6 +1,5 @@
 /**
  * Supabase Client — singleton instance for the entire app.
- * Call initSupabase() once at app startup (in App.tsx).
  */
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { supabaseConfig } from '../constants/config';

@@ -53,15 +53,9 @@ export const useReceiptStore = create<ReceiptState>((set) => ({
         })),
 
     setCurrentReceipt: (receipt) => set({ currentReceipt: receipt }),
-
     setMonthlyStats: (stats) => set({ monthlyStats: stats }),
-
     setLoading: (isLoading) => set({ isLoading }),
-
-    setUploading: (isUploading, uploadProgress = 0) =>
-        set({ isUploading, uploadProgress }),
-
+    setUploading: (isUploading, uploadProgress = 0) => set({ isUploading, uploadProgress }),
     setError: (error) => set({ error }),
-
     clearError: () => set({ error: null }),
 }));
