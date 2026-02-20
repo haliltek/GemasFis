@@ -1,3 +1,7 @@
+// Edge Function: analyze-receipt
+// Runtime: Deno (Supabase)
+// Görev: Fiş görseli → Gemini Vision → OCR + kategori önerileri
+
 const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY') ?? '';
 const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
@@ -64,7 +68,7 @@ GID.RKL=Reklam&Pazarlama, GID.SAG=Sağlık, GID.EGT=Eğitim, GID.GEN=Genel`;
         const geminiData = await geminiRes.json();
         const rawContent: string = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
 
-        // JSON bloğunu çıkar (```json...``` veya doğrudan JSON olabilir)
+        // JSON bloğunu çıkar
         const jsonMatch = rawContent.match(/```json\s*([\s\S]*?)\s*```/) ?? rawContent.match(/({\s*"[\s\S]*})/);
         const jsonStr = jsonMatch ? jsonMatch[1] : rawContent.trim();
         const parsed = JSON.parse(jsonStr);
@@ -72,21 +76,22 @@ GID.RKL=Reklam&Pazarlama, GID.SAG=Sağlık, GID.EGT=Eğitim, GID.GEN=Genel`;
         return new Response(
             JSON.stringify({
                 ocrData: {
-                    rawText: parsed.rawText ?? '',
-                    confidence: parsed.confidence ?? 0.5,
+                    rawText:      parsed.rawText      ?? '',
+                    confidence:   parsed.confidence   ?? 0.5,
                     merchantName: parsed.merchantName ?? '',
-                    taxNumber: parsed.taxNumber ?? undefined,
-                    totalAmount: parsed.totalAmount ?? 0,
-                    kdvAmount: parsed.kdvAmount ?? undefined,
-                    currency: parsed.currency ?? 'TRY',
-                    date: parsed.date ?? new Date().toISOString().slice(0, 10),
-                    lineItems: parsed.lineItems ?? [],
+                    taxNumber:    parsed.taxNumber    ?? undefined,
+                    totalAmount:  parsed.totalAmount  ?? 0,
+                    kdvAmount:    parsed.kdvAmount    ?? undefined,
+                    currency:     parsed.currency     ?? 'TRY',
+                    date:         parsed.date         ?? new Date().toISOString().slice(0, 10),
+                    lineItems:    parsed.lineItems    ?? [],
                 },
                 aiSuggestions: parsed.aiSuggestions ?? [],
-                confidence: parsed.confidence ?? 0.5,
+                confidence:    parsed.confidence    ?? 0.5,
             }),
             { headers: { ...cors, 'Content-Type': 'application/json' } }
         );
+
     } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : String(err);
         console.error('analyze-receipt error:', msg);
