@@ -256,7 +256,7 @@ export function ScanScreen({ navigation }: any) {
                                 {[
                                     'Fişi düz ve aydınlık yüzeye koyun',
                                     'Tüm metin alanlarının görünür olmasını sağlayın',
-                                    'Kamera'yı fişe dik tutun(perspektif bozulmasını önler)',
+                                    "Kamera'yı fişe dik tutun (perspektif bozulmasını önler)",
                   'Toplam tutar ve tarih mutlaka görünmeli',
                                 ].map((tip, i) => (
                                     <View key={i} style={styles.tipRow}>
