@@ -1,3 +1,108 @@
+📑 Project: Logo-Linked Expense Tracker (Mobile)
+Bu proje; şirket yöneticilerinin ve müdürlerinin yaptığı harcamaları (fiş/fatura) anında dijitalleştirerek Logo Tiger ERP sistemine "Gider Fişi" (Service Invoice/Expense Slip) olarak aktarmayı amaçlayan, yapay zeka destekli bir mobil otomasyon çözümüdür.
+
+🚀 1) Ürün Hedefi ve Kapsam
+Amaç
+Kullanıcı fiş fotoğrafını çeker → Sistem OCR ile verileri ayıklar → Logo Tiger ile eşleşen masaj kalemlerini/projeleri önerir → Onaylanan veri Logo REST API / Object Post aracılığıyla doğrudan ERP'ye gider fişi olarak yazılır.
+
+MVP Özellikleri (Must-Have)
+Fiş Tarama: Expo Camera ile yüksek kaliteli çekim ve otomatik kırpma.
+
+Akıllı OCR & Data Extraction: Fiş üzerindeki Toplam Tutar, Tarih, KDV, Vergi No ve Merchant (Satıcı) bilgisinin yakalanması.
+
+Logo Tiger Senkronizasyonu:
+
+Hizmet Kartları (Gider kalemleri) listeleme.
+
+Cari Hesap/Kasa/Banka seçimi.
+
+Gider Onay Ekranı: Çıkarılan verilerin Logo'ya gönderilmeden önce son kontrolü.
+
+Durum Takibi: "Gönderildi", "Logo'da Hata Aldı", "Beklemede" statüleri.
+
+📱 2) UX: Akıllı ve Hızlı Akış
+Ekran 1 — "Hızlı Çekim"
+Kamera arayüzü (Tek buton: "Fişi Tara").
+
+Görüntü işleme (Netleştirme ve Perspektif düzeltme).
+
+Yükleniyor... animasyonu sırasında OCR ve Logo API sorgusu.
+
+Ekran 2 — "Veri Eşleme & Onay"
+Görsel Kanıt: Çekilen fişin üstte küçük önizlemesi.
+
+Form Alanları: * Tutar & Para Birimi (OCR'dan geldi).
+
+Tarih (OCR'dan geldi).
+
+Hizmet Seçimi: (Logo'dan gelen masraf merkezleri/hizmet kartları - AI destekli öneri).
+
+Açıklama: (Örn: "Müşteri öğle yemeği").
+
+CTA: "Logo'ya Aktar".
+
+Ekran 3 — "Dashboard & Geçmiş"
+Bu ayki toplam harcamalar.
+
+Logo'ya başarıyla aktarılan son 10 işlem.
+
+Aktarılamayan (Hatalı) kayıtlar için "Yeniden Dene" opsiyonu.
+
+🏗️ 3) Sistem Mimarisi (Teknik Yapı)
+Mobil Katman (Frontend)
+Framework: Expo (React Native).
+
+State Management: TanStack Query (Zustand veya Redux ile birlikte).
+
+OCR: Google Vision API veya cihaz içi ML Kit (Expo modülleri).
+
+Backend Katman (Bridge/Köprü)
+Logo Tiger doğrudan dış dünyaya açık olmadığı için arada bir Node.js/NestJS köprü (Middleware) gereklidir:
+
+Auth: JWT tabanlı kullanıcı doğrulama (Müdür/Yönetici rolleri).
+
+DB (PostgreSQL/MongoDB): Fiş görsellerinin URL'leri, kullanıcı geçmişi ve Logo transfer logları.
+
+File Storage: AWS S3 veya Firebase Storage (Fişlerin dijital arşivi için).
+
+Logo Integration: * Logo REST Service üzerinden JSON post işlemleri.
+
+Gerekli ise Logo Objects (L_CAPILIB) üzerinden DLL tetikleme.
+
+🛠️ 4) Veritabanı Şeması (Taslak)
+Receipts Table:
+
+id: UUID
+
+user_id: Foreign Key
+
+image_url: String
+
+amount: Decimal
+
+date: DateTime
+
+merchant_name: String
+
+logo_status: Enum (Pending, Success, Failed)
+
+logo_ref_no: String (Logo'daki kayıt numarası)
+
+raw_ocr_data: JSONB (Yedek veri için)
+
+📅 5) Yol Haritası (Roadmap)
+[ ] Phase 1: Expo ile kamera ve temel UI tasarımı.
+
+[ ] Phase 2: OCR entegrasyonu ve veri ayrıştırma algoritması (Regex/AI).
+
+[ ] Phase 3: Node.js Backend ve DB kurulumu (Fişleri saklama).
+
+[ ] Phase 4: Logo Tiger REST API entegrasyonu (Gider Fişi oluşturma).
+
+[ ] Phase 5: Push Notifications (Harcama onaylandı/reddedildi bildirimleri).
+
+
+
 # Starter Template with React Navigation
 
 This is a minimal starter template for React Native apps using Expo and React Navigation.

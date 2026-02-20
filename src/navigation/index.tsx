@@ -1,105 +1,209 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { HeaderButton, Text } from '@react-navigation/elements';
-import {
-  createStaticNavigation,
-  StaticParamList,
-} from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import { ActivityIndicator, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Image } from 'react-native';
-import bell from '../assets/bell.png';
-import newspaper from '../assets/newspaper.png';
-import { Home } from './screens/Home';
-import { Profile } from './screens/Profile';
-import { Settings } from './screens/Settings';
-import { Updates } from './screens/Updates';
-import { NotFound } from './screens/NotFound';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Text } from 'react-native';
+import { Colors, Typography } from '../constants/theme';
+import { useAuthStore } from '../store/authStore';
+import { getSupabase } from '../lib/supabase';
 
-const HomeTabs = createBottomTabNavigator({
-  screens: {
-    Home: {
-      screen: Home,
-      options: {
-        title: 'Feed',
-        tabBarIcon: ({ color, size }) => (
-          <Image
-            source={newspaper}
-            tintColor={color}
-            style={{
-              width: size,
-              height: size,
-            }}
-          />
-        ),
-      },
-    },
-    Updates: {
-      screen: Updates,
-      options: {
-        tabBarIcon: ({ color, size }) => (
-          <Image
-            source={bell}
-            tintColor={color}
-            style={{
-              width: size,
-              height: size,
-            }}
-          />
-        ),
-      },
-    },
-  },
-});
+// ── Auth Screens ──────────────────────────────────────────────
+import { LoginScreen } from '../screens/auth/LoginScreen';
 
-const RootStack = createNativeStackNavigator({
-  screens: {
-    HomeTabs: {
-      screen: HomeTabs,
-      options: {
-        title: 'Home',
+// ── Main Screens ──────────────────────────────────────────────
+import { DashboardScreen } from '../screens/main/DashboardScreen';
+import { ScanScreen } from '../screens/main/ScanScreen';
+import { HistoryScreen } from '../screens/main/HistoryScreen';
+import { ReceiptDetailScreen } from '../screens/main/ReceiptDetailScreen';
+import { ReceiptFormScreen } from '../screens/main/ReceiptFormScreen';
+
+// ── Types ─────────────────────────────────────────────────────
+export type AuthStackParamList = {
+  Login: undefined;
+};
+
+export type MainTabParamList = {
+  Dashboard: undefined;
+  Scan: undefined;
+  History: undefined;
+};
+
+export type RootStackParamList = {
+  MainTabs: undefined;
+  ReceiptDetail: { receiptId: string };
+  ReceiptForm: { imageUri: string; ocrData?: any };
+};
+
+const AuthStack = createNativeStackNavigator<AuthStackParamList>();
+const Tab = createBottomTabNavigator<MainTabParamList>();
+const RootStack = createNativeStackNavigator<RootStackParamList>();
+
+// ─── Tab Icon helper ──────────────────────────────────────────
+function TabIcon({ icon, focused }: { icon: string; focused: boolean }) {
+  return (
+    <Text style={{ fontSize: 22, opacity: focused ? 1 : 0.55 }}>{icon}</Text>
+  );
+}
+
+// ─── Bottom Tab Navigator ─────────────────────────────────────
+function MainTabNavigator() {
+  return (
+    <Tab.Navigator
+      screenOptions={{
         headerShown: false,
-      },
-    },
-    Profile: {
-      screen: Profile,
-      linking: {
-        path: ':user(@[a-zA-Z0-9-_]+)',
-        parse: {
-          user: (value) => value.replace(/^@/, ''),
+        tabBarStyle: {
+          backgroundColor: Colors.surface,
+          borderTopColor: Colors.border,
+          borderTopWidth: 1,
+          paddingBottom: 6,
+          paddingTop: 6,
+          height: 62,
         },
-        stringify: {
-          user: (value) => `@${value}`,
+        tabBarActiveTintColor: Colors.primaryLight,
+        tabBarInactiveTintColor: Colors.textTertiary,
+        tabBarLabelStyle: {
+          fontSize: Typography.xs,
+          fontWeight: Typography.weights.medium as any,
+          marginTop: 2,
         },
-      },
-    },
-    Settings: {
-      screen: Settings,
-      options: ({ navigation }) => ({
-        presentation: 'modal',
-        headerRight: () => (
-          <HeaderButton onPress={navigation.goBack}>
-            <Text>Close</Text>
-          </HeaderButton>
-        ),
-      }),
-    },
-    NotFound: {
-      screen: NotFound,
-      options: {
-        title: '404',
-      },
-      linking: {
-        path: '*',
-      },
-    },
-  },
-});
+      }}
+    >
+      <Tab.Screen
+        name="Dashboard"
+        component={DashboardScreen}
+        options={{
+          tabBarLabel: 'Ana Sayfa',
+          tabBarIcon: ({ focused }) => <TabIcon icon="🏠" focused={focused} />,
+        }}
+      />
+      <Tab.Screen
+        name="Scan"
+        component={ScanScreen}
+        options={{
+          tabBarLabel: 'Tara',
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={{
+                backgroundColor: focused ? Colors.primary : Colors.surface,
+                width: 48,
+                height: 48,
+                borderRadius: 24,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: 6,
+                borderWidth: 2,
+                borderColor: focused ? Colors.primary : Colors.border,
+                shadowColor: Colors.primary,
+                shadowOpacity: focused ? 0.5 : 0,
+                shadowRadius: 8,
+                elevation: focused ? 6 : 0,
+              }}
+            >
+              <Text style={{ fontSize: 22 }}>📷</Text>
+            </View>
+          ),
+          tabBarLabelStyle: {
+            fontSize: Typography.xs,
+            fontWeight: Typography.weights.bold as any,
+            color: Colors.primary,
+          },
+        }}
+      />
+      <Tab.Screen
+        name="History"
+        component={HistoryScreen}
+        options={{
+          tabBarLabel: 'Geçmiş',
+          tabBarIcon: ({ focused }) => <TabIcon icon="📋" focused={focused} />,
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
 
-export const Navigation = createStaticNavigation(RootStack);
+// ─── Root Stack (Modal-style detail screens) ──────────────────
+function MainStack() {
+  return (
+    <RootStack.Navigator screenOptions={{ headerShown: false }}>
+      <RootStack.Screen name="MainTabs" component={MainTabNavigator} />
+      <RootStack.Screen
+        name="ReceiptDetail"
+        component={ReceiptDetailScreen}
+        options={{ animation: 'slide_from_right' }}
+      />
+      <RootStack.Screen
+        name="ReceiptForm"
+        component={ReceiptFormScreen}
+        options={{ animation: 'slide_from_bottom' }}
+      />
+    </RootStack.Navigator>
+  );
+}
 
-type RootStackParamList = StaticParamList<typeof RootStack>;
+// ─── Auth Stack ───────────────────────────────────────────────
+function AuthNavigator() {
+  return (
+    <AuthStack.Navigator screenOptions={{ headerShown: false }}>
+      <AuthStack.Screen name="Login" component={LoginScreen} />
+    </AuthStack.Navigator>
+  );
+}
 
-declare global {
-  namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
+// ─── Root Navigator (auth gate) ───────────────────────────────
+export function AppNavigator() {
+  const { isAuthenticated, isLoading, setUser } = useAuthStore();
+
+  useEffect(() => {
+    const client = getSupabase();
+
+    // Restore session on app start
+    client.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        // Map Supabase user to app User type
+        setUser({
+          uid: session.user.id,
+          email: session.user.email ?? '',
+          displayName: session.user.user_metadata?.display_name ?? session.user.email ?? '',
+          role: session.user.user_metadata?.role ?? 'employee',
+          department: session.user.user_metadata?.department,
+          createdAt: new Date(session.user.created_at),
+        });
+      } else {
+        setUser(null);
+      }
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = client.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setUser({
+          uid: session.user.id,
+          email: session.user.email ?? '',
+          displayName: session.user.user_metadata?.display_name ?? session.user.email ?? '',
+          role: session.user.user_metadata?.role ?? 'employee',
+          department: session.user.user_metadata?.department,
+          createdAt: new Date(session.user.created_at),
+        });
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, backgroundColor: Colors.background, alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
   }
+
+  return (
+    <NavigationContainer>
+      {isAuthenticated ? <MainStack /> : <AuthNavigator />}
+    </NavigationContainer>
+  );
 }

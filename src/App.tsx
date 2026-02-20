@@ -1,37 +1,26 @@
-import { Assets as NavigationAssets } from '@react-navigation/elements';
-import { DarkTheme, DefaultTheme } from '@react-navigation/native';
-import { Asset } from 'expo-asset';
-import { createURL } from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
-import { useColorScheme } from 'react-native';
-import { Navigation } from './navigation';
-
-Asset.loadAsync([
-  ...NavigationAssets,
-  require('./assets/newspaper.png'),
-  require('./assets/bell.png'),
-]);
+import { StatusBar } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { AppNavigator } from './navigation';
+import { Colors } from './constants/theme';
 
 SplashScreen.preventAutoHideAsync();
 
-const prefix = createURL('/');
-
 export function App() {
-  const colorScheme = useColorScheme();
+  const [ready, setReady] = React.useState(false);
 
-  const theme = colorScheme === 'dark' ? DarkTheme : DefaultTheme
+  React.useEffect(() => {
+    // Any global asset loading can go here
+    SplashScreen.hideAsync().then(() => setReady(true));
+  }, []);
+
+  if (!ready) return null;
 
   return (
-    <Navigation
-      theme={theme}
-      linking={{
-        enabled: 'auto',
-        prefixes: [prefix],
-      }}
-      onReady={() => {
-        SplashScreen.hideAsync();
-      }}
-    />
+    <SafeAreaProvider>
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
+      <AppNavigator />
+    </SafeAreaProvider>
   );
 }
