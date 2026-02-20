@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Edge Function: analyze-receipt
 // Runtime: Deno (Supabase)
 // Görev: Fiş görseli → Gemini Vision → OCR + kategori önerileri

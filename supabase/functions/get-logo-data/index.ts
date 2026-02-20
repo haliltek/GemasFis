@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Edge Function: get-logo-data
 // Runtime: Deno (Supabase)
 // Görev: Logo Tiger'dan masraf kalemleri ve kasa/banka hesaplarını çek

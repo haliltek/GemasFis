@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Edge Function: transfer-to-logo
 // Runtime: Deno (Supabase)
 // Görev: Fiş verisini Logo Tiger REST API'ye aktar → Masraf fişi oluştur
